@@ -21,13 +21,14 @@ class EarlyStopping:
     Classe pour arrêter l'entraînement si la validation loss n'améliore plus.
     """
     
-    def __init__(self, patience=7, verbose=False, delta=0, path='checkpoint.pt'):
+    def __init__(self, patience=7, verbose=False, delta=0, path='checkpoint.pt', save_best=True):
         """
         Args:
             patience (int): Nombre d'époques à attendre après la dernière amélioration
             verbose (bool): Si True, affiche un message pour chaque amélioration
             delta (float): Différence minimale pour considérer une amélioration
             path (str): Chemin pour sauvegarder le meilleur modèle
+            save_best (bool): Si True, sauvegarde le meilleur modèle
         """
         self.patience = patience
         self.verbose = verbose
@@ -37,6 +38,7 @@ class EarlyStopping:
         self.val_loss_min = np.inf
         self.delta = delta
         self.path = path
+        self.save_best = save_best
     
     def __call__(self, val_loss, model, optimizer, epoch):
         """
@@ -66,25 +68,32 @@ class EarlyStopping:
     
     def save_checkpoint(self, val_loss, model, optimizer, epoch):
         """
-        Sauvegarde le modèle lorsqu'une meilleure validation loss est obtenue.
+        Sauvegarde le modèle lorsqu'une amélioration de la métrique de validation est observée.
         
         Args:
             val_loss (float): Perte de validation
             model (nn.Module): Modèle à sauvegarder
-            optimizer (optim.Optimizer): Optimiseur
-            epoch (int): Époque actuelle
+            optimizer (torch.optim.Optimizer): Optimiseur
+            epoch (int): Numéro de l'époque
         """
+        # Ne sauvegarder que si save_best est True
+        if not self.save_best:
+            return
+            
         if self.verbose:
-            print(f'Validation loss améliorée ({self.val_loss_min:.6f} --> {val_loss:.6f}). Sauvegarde du modèle...')
+            print(f"Validation loss améliorée ({self.val_loss_min:.6f} --> {val_loss:.6f}). Sauvegarde du modèle...")
         
-        # Sauvegarde du modèle
-        checkpoint = {
+        # Créer le répertoire si nécessaire
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        
+        # Sauvegarder le modèle
+        torch.save({
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
-            'loss': val_loss
-        }
-        torch.save(checkpoint, self.path)
+            'loss': val_loss,
+        }, self.path)
+        
         self.val_loss_min = val_loss
 
 
@@ -178,7 +187,7 @@ def validate_epoch(model, val_loader, criterion, device, disable_tqdm=False):
 
 def train_model(model, train_loader, val_loader, model_name="model", num_epochs=100, 
                 learning_rate=0.001, momentum=0.9, weight_decay=1e-4, patience=10, device=None,
-                verbose=True):
+                verbose=True, save_best=True):
     """
     Entraîne le modèle avec early stopping.
     
@@ -194,6 +203,7 @@ def train_model(model, train_loader, val_loader, model_name="model", num_epochs=
         patience (int): Patience pour l'early stopping
         device (torch.device, optional): Appareil à utiliser (auto-détecté si None)
         verbose (bool): Si True, affiche la progression pendant l'entraînement
+        save_best (bool): Si True, sauvegarde le meilleur modèle
         
     Returns:
         tuple: (model, history_dict)
@@ -212,7 +222,7 @@ def train_model(model, train_loader, val_loader, model_name="model", num_epochs=
     best_model_path = os.path.join(MODEL_SAVE_DIR, f"{model_name}_best.pth")
     
     # Early stopping
-    early_stopping = EarlyStopping(patience=patience, verbose=verbose, path=best_model_path)
+    early_stopping = EarlyStopping(patience=patience, verbose=verbose, path=best_model_path, save_best=save_best)
     
     # Historique des métriques
     history = {
@@ -250,21 +260,26 @@ def train_model(model, train_loader, val_loader, model_name="model", num_epochs=
                 print(f"Early stopping à l'époque {epoch+1}")
             break
     
-    # Charger le meilleur modèle
-    checkpoint = torch.load(best_model_path)
-    model.load_state_dict(checkpoint['model_state_dict'])
+    # Charger le meilleur modèle seulement s'il a été sauvegardé
+    if save_best and os.path.exists(best_model_path):
+        checkpoint = torch.load(best_model_path)
+        model.load_state_dict(checkpoint['model_state_dict'])
     
-    # Sauvegarde du modèle final
-    final_model_path = os.path.join(MODEL_SAVE_DIR, f"{model_name}_final.pth")
-    torch.save({
-        'epoch': num_epochs,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'train_loss': train_loss,
-        'val_loss': val_loss
-    }, final_model_path)
+    # Sauvegarde du modèle final seulement si on sauvegarde les modèles
+    if save_best:
+        final_model_path = os.path.join(MODEL_SAVE_DIR, f"{model_name}_final.pth")
+        torch.save({
+            'epoch': num_epochs,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'train_loss': train_loss,
+            'val_loss': val_loss
+        }, final_model_path)
     
     if verbose:
-        print(f"Entraînement terminé. Meilleur modèle sauvegardé à {best_model_path}")
+        if save_best:
+            print(f"Entraînement terminé. Meilleur modèle sauvegardé à {best_model_path}")
+        else:
+            print(f"Entraînement terminé. Aucun modèle sauvegardé.")
     
     return model, history 

@@ -5,7 +5,7 @@ Initialisation du module models.
 from .base_model import BaseCNN
 from .advanced_model import AdvancedCNN
 from .patch_model import PatchCNN
-from .enhanced_patch_model import EnhancedPatchCNN
+from .enhanced_patch_model_ray_tune import EnhancedPatchCNN
 
 __all__ = ["BaseCNN", "AdvancedCNN", "PatchCNN", "EnhancedPatchCNN"]
 

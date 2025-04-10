@@ -48,15 +48,16 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def analyze_class_distribution(dataset_info):
+def analyze_class_distribution(dataset_info, threshold_percentile=25):
     """
-    Analyse la distribution des classes dans le jeu de données.
+    Analyse la distribution des classes dans le jeu de données et identifie les classes sous-représentées.
     
     Args:
         dataset_info (dict): Informations sur le jeu de données
+        threshold_percentile (int): Percentile à utiliser comme seuil (les classes sous ce percentile sont considérées sous-représentées)
         
     Returns:
-        tuple: (distribution des classes, classes sous-représentées)
+        tuple: (distribution des classes, classes sous-représentées, nombre moyen d'échantillons par classe)
     """
     # Compter les occurrences de chaque classe
     class_counter = Counter()
@@ -64,19 +65,28 @@ def analyze_class_distribution(dataset_info):
         class_counter[label] += 1
     
     # Calculer les statistiques de base
-    mean_count = sum(class_counter.values()) / len(class_counter)
-    median_count = sorted(class_counter.values())[len(class_counter) // 2]
+    class_counts = list(class_counter.values())
+    mean_count = sum(class_counts) / len(class_counter)
+    median_count = sorted(class_counts)[len(class_counter) // 2]
+    threshold_count = np.percentile(class_counts, threshold_percentile)
+    
     logger.info(f"Nombre moyen d'images par classe: {mean_count:.2f}")
     logger.info(f"Nombre médian d'images par classe: {median_count}")
+    logger.info(f"Seuil de sous-représentation ({threshold_percentile}e percentile): {threshold_count}")
     
-    # Identifier les classes sous-représentées (moins de 15 images)
-    underrepresented_classes = {cls: count for cls, count in class_counter.items() if count < 15}
-    logger.info(f"Classes sous-représentées (<15 images): {len(underrepresented_classes)}")
+    # Identifier les classes sous-représentées (en dessous du seuil)
+    underrepresented_classes = {cls: count for cls, count in class_counter.items() if count < threshold_count}
+    logger.info(f"Classes sous-représentées identifiées: {len(underrepresented_classes)}")
+    
+    # Classes avec nombre d'échantillons au-dessus de la moyenne
+    well_represented_classes = {cls: count for cls, count in class_counter.items() if count >= mean_count}
+    logger.info(f"Classes bien représentées (>= moyenne): {len(well_represented_classes)}")
     
     # Afficher la distribution des classes sous forme d'histogramme
     plt.figure(figsize=(12, 6))
     plt.bar(range(len(class_counter)), sorted(class_counter.values(), reverse=True))
-    plt.axhline(y=15, color='r', linestyle='--', label='Seuil de 15 images')
+    plt.axhline(y=threshold_count, color='r', linestyle='--', label=f'Seuil ({threshold_percentile}e percentile)')
+    plt.axhline(y=mean_count, color='g', linestyle='--', label='Moyenne')
     plt.xlabel('Classes (triées par nombre d\'images)')
     plt.ylabel('Nombre d\'images')
     plt.title('Distribution des classes dans le jeu d\'entraînement')
@@ -84,7 +94,7 @@ def analyze_class_distribution(dataset_info):
     plt.tight_layout()
     plt.savefig('class_distribution.png')
     
-    return class_counter, underrepresented_classes
+    return class_counter, underrepresented_classes, mean_count
 
 
 def compute_richness_score(image_path):
@@ -371,14 +381,16 @@ def create_advanced_augmentations(image_path, num_augmentations=5):
     return augmented_images
 
 
-def augment_class(class_id, dataset_info, target_count=15, output_dir=None, return_image_paths=False):
+def augment_class(class_id, dataset_info, target_count=None, max_count=None, mean_count=None, output_dir=None, return_image_paths=False):
     """
     Augmente les images d'une classe sous-représentée.
     
     Args:
         class_id (int): ID de la classe à augmenter
         dataset_info (dict): Informations sur le jeu de données
-        target_count (int): Nombre cible d'images après augmentation
+        target_count (int, optional): Nombre cible minimal d'images après augmentation
+        max_count (int, optional): Nombre maximal d'images à générer
+        mean_count (float, optional): Nombre moyen d'échantillons par classe dans le dataset
         output_dir (str): Répertoire de sortie pour les images augmentées
         return_image_paths (bool): Si True, retourne les chemins des images augmentées
         
@@ -393,6 +405,15 @@ def augment_class(class_id, dataset_info, target_count=15, output_dir=None, retu
         return [] if return_image_paths else None
     
     current_count = len(class_images)
+    
+    # Déterminer le nombre cible d'images
+    if mean_count and target_count is None:
+        # Si la moyenne est fournie, viser 80% de la moyenne
+        target_count = int(mean_count * 0.8)
+    
+    if target_count is None:
+        target_count = 15  # Valeur par défaut
+    
     logger.info(f"Classe {class_id}: {current_count} images existantes, cible: {target_count}")
     
     if current_count >= target_count:
@@ -400,41 +421,54 @@ def augment_class(class_id, dataset_info, target_count=15, output_dir=None, retu
         return [] if return_image_paths else None
     
     # Nombre d'augmentations nécessaires
-    needed_count = target_count - current_count
+    needed_count = min(target_count - current_count, max_count or float('inf'))
     
     # Créer le répertoire de sortie si nécessaire
     if output_dir:
         class_output_dir = os.path.join(output_dir, f"class_{class_id}")
         os.makedirs(class_output_dir, exist_ok=True)
     
-    # Sélectionner aléatoirement des images à augmenter
-    selected_images = random.choices(class_images, k=needed_count)
+    # Déterminer le nombre d'augmentations par image source
+    augs_per_image = max(1, needed_count // len(class_images) + (1 if needed_count % len(class_images) > 0 else 0))
+    
+    logger.info(f"Classe {class_id}: génération de ~{augs_per_image} augmentations par image source")
     
     new_image_paths = []
+    total_augmentations = 0
     
-    # Pour chaque image sélectionnée, créer une augmentation
-    for i, (img_path, _) in enumerate(selected_images):
-        # Créer une seule augmentation par image
-        augmented_images = create_advanced_augmentations(img_path, num_augmentations=1)
+    # Pour chaque image de la classe, créer plusieurs augmentations
+    for img_path, _ in class_images:
+        # Limiter la génération au nombre nécessaire
+        remaining = needed_count - total_augmentations
+        if remaining <= 0:
+            break
+            
+        # Nombre d'augmentations pour cette image
+        num_augs = min(augs_per_image, remaining)
+        
+        # Créer les augmentations
+        augmented_images = create_advanced_augmentations(img_path, num_augmentations=num_augs)
         
         if not augmented_images:
             continue
         
-        aug_img = augmented_images[0]
-        
-        # Sauvegarder l'image augmentée
-        if output_dir:
-            # Extraire le nom de fichier d'origine
-            orig_filename = os.path.basename(img_path)
-            new_filename = f"aug_{i}_{orig_filename}"
-            save_path = os.path.join(class_output_dir, new_filename)
-            
-            aug_img.save(save_path)
-            logger.debug(f"Image augmentée sauvegardée: {save_path}")
-            
-            if return_image_paths:
-                new_image_paths.append((save_path, class_id))
+        # Sauvegarder les images augmentées
+        for i, aug_img in enumerate(augmented_images):
+            if output_dir:
+                # Extraire le nom de fichier d'origine
+                orig_filename = os.path.basename(img_path)
+                new_filename = f"aug_{i}_{orig_filename}"
+                save_path = os.path.join(class_output_dir, new_filename)
+                
+                aug_img.save(save_path)
+                logger.debug(f"Image augmentée sauvegardée: {save_path}")
+                
+                if return_image_paths:
+                    new_image_paths.append((save_path, class_id))
+                    
+        total_augmentations += len(augmented_images)
     
+    logger.info(f"Classe {class_id}: {total_augmentations} nouvelles images générées")
     return new_image_paths if return_image_paths else None
 
 
@@ -554,7 +588,10 @@ def main(args):
     
     # Analyser la distribution des classes
     logger.info("Analyse de la distribution des classes")
-    class_distribution, underrepresented_classes = analyze_class_distribution(dataset_info)
+    class_distribution, underrepresented_classes, mean_count = analyze_class_distribution(
+        dataset_info, 
+        threshold_percentile=args.threshold_percentile
+    )
     
     # Créer le répertoire pour les images augmentées
     augmented_dir = os.path.join(DATA_DIR, "augmented")
@@ -579,7 +616,7 @@ def main(args):
                 if patches:
                     visualize_patches(example_image_path, patches)
     
-    # Augmenter les classes sous-représentées
+    # Augmenter uniquement les classes sous-représentées
     if args.augment:
         logger.info(f"Augmentation des {len(underrepresented_classes)} classes sous-représentées")
         
@@ -592,7 +629,9 @@ def main(args):
                     augment_class, 
                     class_id, 
                     dataset_info, 
-                    target_count=args.target_count, 
+                    target_count=args.target_count,
+                    max_count=args.max_per_class,
+                    mean_count=mean_count,
                     output_dir=augmented_dir,
                     return_image_paths=True
                 )
@@ -613,10 +652,15 @@ def main(args):
             logger.info(f"Total de {len(all_new_images)} nouvelles images générées")
             updated_info = update_dataset_info(dataset_info, all_new_images)
             
-            # Sauvegarder dans un nouveau fichier
-            output_file = os.path.join(DATA_DIR, "augmented_dataset_info.csv")
-            save_updated_dataset_info(updated_info, output_file)
+            # Générer le fichier train_augmented.txt
+            output_file = os.path.join(DATA_DIR, "train_augmented.txt")
+            with open(output_file, 'w') as f:
+                for img_path, label in updated_info["train"]:
+                    # Extraire le chemin relatif à DATA_DIR
+                    rel_path = os.path.relpath(img_path, DATA_DIR)
+                    f.write(f"{rel_path} {label}\n")
             
+            logger.info(f"Fichier train_augmented.txt généré avec {len(updated_info['train'])} images")
             logger.info("Augmentation des données terminée avec succès!")
     
     logger.info("Prétraitement terminé")
@@ -626,7 +670,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Prétraitement des données pour le classificateur d'écorces")
     parser.add_argument("--visualize", action="store_true", help="Visualiser des exemples d'augmentation")
     parser.add_argument("--augment", action="store_true", help="Augmenter les classes sous-représentées")
-    parser.add_argument("--target_count", type=int, default=15, help="Nombre cible d'images par classe")
+    parser.add_argument("--target_count", type=int, default=None, help="Nombre cible minimal d'images par classe")
+    parser.add_argument("--max_per_class", type=int, default=50, help="Nombre maximal d'images générées par classe")
+    parser.add_argument("--threshold_percentile", type=int, default=25, 
+                        help="Percentile à utiliser comme seuil pour identifier les classes sous-représentées")
     args = parser.parse_args()
     
     main(args) 

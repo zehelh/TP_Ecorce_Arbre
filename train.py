@@ -99,7 +99,7 @@ def main():
     print(f"Utilisation de l'appareil: {device}")
     
     # Créer les dataloaders
-    use_patches = args.model == "patch"
+    use_patches = args.model == "patch" or args.model == "enhanced_patch"
     train_loader, val_loader = get_dataloaders(
         use_patches=use_patches,
         patch_size=args.patch_size,
@@ -112,7 +112,7 @@ def main():
     
     # Créer le modèle
     model_params = {}
-    if args.model == "patch":
+    if args.model == "patch" or args.model == "enhanced_patch":
         model_params["num_patches"] = args.num_patches
     
     model = get_model(

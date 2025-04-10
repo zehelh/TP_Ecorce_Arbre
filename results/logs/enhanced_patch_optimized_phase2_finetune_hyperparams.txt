@@ -1,0 +1,12 @@
+model: enhanced_patch_optimized_phase2
+lr: 4.4000000000000006e-05
+momentum: 0.938
+weight_decay: 0.00018
+backbone: resnet50
+use_context: True
+num_patches: 9
+patch_size: 96
+patch_stride: 24
+epochs: 50
+patience: 20
+training_time: 58880.64 seconds

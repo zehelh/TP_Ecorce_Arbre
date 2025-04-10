@@ -2,55 +2,78 @@
 
 Ce fichier recense toutes les modifications notables apportées au projet.
 
-## [0.1.5] - 2024-07-07
+## [0.3.0] - 2024-04-11
 
 ### Ajouté
-- Support pour le modèle EnhancedPatchCNN avec mécanisme d'attention multi-têtes
-- Mise à jour du README.md avec les instructions pour utiliser le modèle enhanced_patch
-- Visualisation spécifique pour les modèles basés sur des patches
-
-## [0.1.4] - 2024-07-06
-
-### Corrigé
-- Erreur avec NumPy 2.0 : remplacement de `np.Inf` par `np.inf` dans le module d'early stopping
-- Compatibilité assurée avec les versions récentes de NumPy (>= 2.0)
-
-## [0.1.3] - 2024-07-05
-
-### Corrigé
-- Erreur lors de l'utilisation de modèles avancés avec l'option `--model advanced --cuda`
-- Filtrage des arguments spécifiques à chaque type de modèle (num_patches uniquement pour PatchCNN)
-- Restructuration des passages de paramètres pour éviter les erreurs d'arguments inattendus
-
-## [0.1.2] - 2024-07-04
+- Fonction `load_dataset_info()` dans dataset.py pour le chargement des données
+- Ajout de scikit-image à requirements.txt pour l'analyse de texture
+- Implémentation du modèle optimisé avec support pour l'entraînement en 2 phases
+- Script `train_2phases.py` pour l'entraînement progressif (transfer learning puis fine-tuning)
+- Augmentation ciblée des données pour les classes sous-représentées
+- Documentation détaillée sur l'utilisation des différentes fonctionnalités
 
 ### Modifié
-- Ajout de la suppression des avertissements dans les scripts principaux
-- Réduction de la verbosité dans les modules d'évaluation et de visualisation
-- Ajout d'options verbose=False pour désactiver les barres de progression tqdm
-- Configuration des niveaux de journalisation pour PyTorch, PIL et Matplotlib
+- Amélioration du processus d'augmentation de données avec analyse de distribution
+- Support pour différentes architectures backbone (ResNet18/34/50)
+- Mise à jour du README avec instructions pour toutes les fonctionnalités
+- Organisation du code pour une meilleure maintenance et réutilisation
 
-## [0.1.1] - 2024-07-03
+### Corrigé
+- Correction de l'erreur d'importation dans preprocess_data.py
+- Compatibilité avec Ray Tune 2.0+ pour l'optimisation d'hyperparamètres
+- Gestion robuste du chargement des modèles et des données
+
+## [0.2.0] - 2024-04-10
+
+### Ajouté
+- Optimiseur d'hyperparamètres basé sur Ray Tune
+- Script hyperopt.py pour la recherche automatique des meilleurs hyperparamètres
+- Support pour la désactivation de l'enregistrement des modèles pendant l'optimisation
+- Callback d'estimation de temps pour l'optimisation d'hyperparamètres
 
 ### Modifié
-- Mise à jour du README.md avec les commandes correctes pour utiliser main.py et train.py
-- Ajout de nouvelles commandes pour la visualisation des modèles
-- Clarification des options --cuda pour les commandes d'entraînement et d'évaluation
+- Amélioration de la fonction train_model pour supporter l'optimisation
+- Optimisation de la classe EarlyStopping pour le mode hyperopt
 
-## [0.1.0] - 2024-07-01
+### Corrigé
+- Gestion de ressources CPU/GPU pour l'optimisation
+- Compatibilité avec différents systèmes d'exploitation
+- Validation des chemins de fichiers pour éviter les erreurs
+
+## [0.1.0] - 2024-04-09
 
 ### Ajouté
 - Structure initiale du projet
-- Fichiers README.md et CHANGELOG.md
-- Configuration de base du projet
-- Roadmap pour le développement
+- Implémentation des modèles de classification (BaseCNN, AdvancedCNN, PatchCNN, EnhancedPatchCNN)
+- Scripts d'entraînement, d'évaluation et de visualisation
+- Système de visualisation des cartes d'attention pour les modèles à base de patches
+- Documentation de base (README, CHANGELOG)
+
+## [0.3.4] - 2024-07-24
+
+### Ajouté
+- Nouveau fichier `QUESTIONS.md` avec les réponses détaillées aux questions du TP
+- Mise à jour complète du README.md avec une structure améliorée et une documentation plus précise
+- Tableau récapitulatif des performances des différents modèles dans le README.md
+
+### Modifié
+- Restructuration du README pour une meilleure lisibilité
+- Correction et mise à jour des commandes d'utilisation
+- Documentation complète de toutes les fonctionnalités du projet
+
+## [0.3.3] - 2024-07-24
+
+### Ajouté
+- Nouveau script `evaluate_optimized.py` pour l'évaluation du modèle EnhancedPatchOptimizedModel basé sur ResNet50
+- Documentation dans le README pour l'utilisation du script d'évaluation optimisé
+
+### Modifié
+- Mise à jour de la section "Évaluation des modèles" dans le README.md
 
 ## À venir
 
-- Exploration du dataset Bark-101
-- Implémentation des classes de chargement du dataset
-- Création des architectures CNN
-- Implémentation de l'approche par patches
-- Optimisation des hyperparamètres
-- Évaluation et comparaison des modèles
-- Visualisation des résultats 
+- Ajout de nouvelles architectures CNN
+- Évaluation comparative approfondie des modèles
+- Support pour l'apprentissage semi-supervisé
+- Optimisation des performances sur différents matériels
+- Interface utilisateur pour la visualisation et l'analyse des résultats 

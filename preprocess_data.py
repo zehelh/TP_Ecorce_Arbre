@@ -233,6 +233,9 @@ def augment_underrepresented_classes(class_counts_train, train_images, train_lab
     Returns:
         list: Chemins des nouvelles images augmentées
     """
+    # Utiliser la variable globale MIN_IMAGES_PER_CLASS définie dans main()
+    global MIN_IMAGES_PER_CLASS
+    
     # Créer le répertoire pour les images augmentées s'il n'existe pas
     os.makedirs(AUGMENTED_DIR, exist_ok=True)
     
@@ -242,6 +245,7 @@ def augment_underrepresented_classes(class_counts_train, train_images, train_lab
         if count < MIN_IMAGES_PER_CLASS
     }
     
+    # Afficher les classes sous-représentées
     print(f"Classes sous-représentées (<{MIN_IMAGES_PER_CLASS} images):")
     for cls, count in sorted(underrepresented_classes.items()):
         print(f"  Classe {cls}: {count} images")
@@ -368,6 +372,20 @@ def main():
     """
     Fonction principale pour le prétraitement des données.
     """
+    # Utiliser la variable globale
+    global MIN_IMAGES_PER_CLASS
+    
+    # Parser les arguments de ligne de commande
+    parser = argparse.ArgumentParser(description="Prétraitement des données pour le dataset Bark-101")
+    parser.add_argument("--visualize", action="store_true", help="Visualiser les augmentations")
+    parser.add_argument("--augment", action="store_true", help="Augmenter les classes sous-représentées")
+    parser.add_argument("--target_count", type=int, default=MIN_IMAGES_PER_CLASS, 
+                        help=f"Nombre cible d'images par classe (défaut: {MIN_IMAGES_PER_CLASS})")
+    args = parser.parse_args()
+    
+    # Mettre à jour la valeur en fonction de l'argument
+    MIN_IMAGES_PER_CLASS = args.target_count
+    
     # Charger les informations du dataset
     train_images, train_labels, test_images, test_labels, class_counts_train = load_dataset_info()
     
@@ -376,18 +394,52 @@ def main():
     print(f"  Images de test: {len(test_images)}")
     print(f"  Nombre de classes: {len(class_counts_train)}")
     
-    # Augmenter les classes sous-représentées
-    new_image_paths = augment_underrepresented_classes(class_counts_train, train_images, train_labels)
-    
-    # Mettre à jour le fichier train.txt
-    update_train_file(new_image_paths)
-    
-    # Visualiser quelques augmentations
-    if new_image_paths:
-        cls = new_image_paths[0][1]  # Label de la première image augmentée
-        original_path = next(img for img, label in zip(train_images, train_labels) if label == cls)
-        aug_dir = os.path.join(AUGMENTED_DIR, str(cls))
-        visualize_augmentations(original_path, aug_dir)
+    if args.augment:
+        # Augmenter les classes sous-représentées
+        new_image_paths = augment_underrepresented_classes(class_counts_train, train_images, train_labels)
+        
+        # Mettre à jour le fichier train.txt
+        update_train_file(new_image_paths)
+        
+        # Visualiser quelques augmentations si demandé
+        if args.visualize and new_image_paths:
+            cls = new_image_paths[0][1]  # Label de la première image augmentée
+            original_path = next(img for img, label in zip(train_images, train_labels) if label == cls)
+            aug_dir = os.path.join(AUGMENTED_DIR, str(cls))
+            visualize_augmentations(original_path, aug_dir)
+    elif args.visualize:
+        # Juste visualiser une augmentation sans modifier les fichiers
+        
+        # Pour la visualisation, nous devons identifier les classes sous-représentées
+        underrepresented_classes = {
+            cls: count for cls, count in class_counts_train.items() 
+            if count < MIN_IMAGES_PER_CLASS
+        }
+        
+        print(f"Classes sous-représentées (<{MIN_IMAGES_PER_CLASS} images):")
+        for cls, count in sorted(underrepresented_classes.items()):
+            print(f"  Classe {cls}: {count} images")
+        
+        # Choisir une classe sous-représentée au hasard
+        if underrepresented_classes:
+            cls = random.choice(list(underrepresented_classes.keys()))
+            class_images = [img for img, label in zip(train_images, train_labels) if label == cls]
+            if class_images:
+                # Créer temporairement des augmentations pour visualisation
+                temp_dir = os.path.join(AUGMENTED_DIR, "temp")
+                os.makedirs(temp_dir, exist_ok=True)
+                
+                image = Image.open(os.path.join(DATA_DIR, class_images[0])).convert('RGB')
+                augmented_images = create_advanced_augmentations(image, 3)
+                
+                for i, aug_img in enumerate(augmented_images):
+                    aug_img_path = os.path.join(temp_dir, f"aug_temp_{i}.jpg")
+                    aug_img.save(aug_img_path)
+                
+                visualize_augmentations(class_images[0], temp_dir)
+                
+                # Nettoyer
+                shutil.rmtree(temp_dir)
 
 
 if __name__ == "__main__":

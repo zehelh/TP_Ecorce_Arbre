@@ -69,12 +69,17 @@ class MultiHeadAttention(nn.Module):
         # Projection finale
         out = self.out_linear(out)
         
-        # Agrégation pondérée des patches
-        global_weights = F.softmax(torch.sum(attn_weights, dim=1).mean(dim=1), dim=-1)
-        global_weights = global_weights.unsqueeze(1).unsqueeze(1)
-        out = torch.sum(out * global_weights, dim=1)
+        # Calculer les poids globaux pour chaque patch
+        # Moyenne des poids d'attention sur toutes les têtes
+        patch_importance = attn_weights.mean(dim=1).mean(dim=1)  # [batch_size, num_patches]
+        global_weights = F.softmax(patch_importance, dim=1).unsqueeze(-1)  # [batch_size, num_patches, 1]
         
-        return out
+        # Agrégation pondérée des patches
+        # Multiplier chaque patch par son poids et sommer
+        weighted_features = out * global_weights  # [batch_size, num_patches, d_model]
+        aggregated_features = weighted_features.sum(dim=1)  # [batch_size, d_model]
+        
+        return aggregated_features
 
 
 class ResNetFeatureExtractor(nn.Module):

@@ -1,0 +1,253 @@
+2025-04-09 10:53:26,166 - __main__ - INFO - Démarrage du prétraitement des données
+2025-04-09 10:53:26,166 - __main__ - INFO - Chargement des informations du jeu de données
+2025-04-09 10:53:26,171 - __main__ - INFO - Analyse de la distribution des classes
+2025-04-09 10:53:26,172 - __main__ - INFO - Nombre moyen d'images par classe: 12.79
+2025-04-09 10:53:26,172 - __main__ - INFO - Nombre médian d'images par classe: 9
+2025-04-09 10:53:26,172 - __main__ - INFO - Seuil de sous-représentation (30e percentile): 5.0
+2025-04-09 10:53:26,173 - __main__ - INFO - Classes sous-représentées identifiées: 26
+2025-04-09 10:53:26,173 - __main__ - INFO - Classes bien représentées (>= moyenne): 37
+2025-04-09 10:53:26,458 - __main__ - INFO - Augmentation des 26 classes sous-représentées
+2025-04-09 10:53:34,261 - __mp_main__ - INFO - Classe 1: 4 images existantes, cible: 30
+2025-04-09 10:53:34,262 - __mp_main__ - INFO - Classe 1: génération de ~7 augmentations par image source
+2025-04-09 10:53:34,275 - __mp_main__ - INFO - Classe 2: 2 images existantes, cible: 30
+2025-04-09 10:53:34,275 - __mp_main__ - INFO - Classe 2: génération de ~14 augmentations par image source
+2025-04-09 10:53:34,288 - __mp_main__ - INFO - Classe 7: 3 images existantes, cible: 30
+2025-04-09 10:53:34,288 - __mp_main__ - INFO - Classe 7: génération de ~9 augmentations par image source
+2025-04-09 10:53:34,289 - __mp_main__ - INFO - Classe 10: 2 images existantes, cible: 30
+2025-04-09 10:53:34,290 - __mp_main__ - INFO - Classe 10: génération de ~14 augmentations par image source
+2025-04-09 10:53:34,495 - __mp_main__ - INFO - Classe 10: 28 nouvelles images générées
+2025-04-09 10:53:34,496 - __mp_main__ - INFO - Classe 11: 2 images existantes, cible: 30
+2025-04-09 10:53:34,496 - __main__ - INFO - Classe 10: 28 nouvelles images générées
+2025-04-09 10:53:34,496 - __mp_main__ - INFO - Classe 11: génération de ~14 augmentations par image source
+2025-04-09 10:53:35,226 - __mp_main__ - INFO - Classe 7: 27 nouvelles images générées
+2025-04-09 10:53:35,228 - __mp_main__ - INFO - Classe 18: 3 images existantes, cible: 30
+2025-04-09 10:53:35,228 - __mp_main__ - INFO - Classe 18: génération de ~9 augmentations par image source
+2025-04-09 10:53:35,228 - __main__ - INFO - Classe 7: 27 nouvelles images générées
+2025-04-09 10:53:35,233 - __mp_main__ - INFO - Classe 1: 26 nouvelles images générées
+2025-04-09 10:53:35,234 - __mp_main__ - INFO - Classe 21: 3 images existantes, cible: 30
+2025-04-09 10:53:35,235 - __main__ - INFO - Classe 1: 26 nouvelles images générées
+2025-04-09 10:53:35,235 - __mp_main__ - INFO - Classe 21: génération de ~9 augmentations par image source
+2025-04-09 10:53:35,316 - __mp_main__ - INFO - Classe 2: 28 nouvelles images générées
+2025-04-09 10:53:35,317 - __mp_main__ - INFO - Classe 22: 3 images existantes, cible: 30
+2025-04-09 10:53:35,319 - __main__ - INFO - Classe 2: 28 nouvelles images générées
+2025-04-09 10:53:35,319 - __mp_main__ - INFO - Classe 22: génération de ~9 augmentations par image source
+2025-04-09 10:53:35,514 - __mp_main__ - INFO - Classe 11: 28 nouvelles images générées
+2025-04-09 10:53:35,516 - __mp_main__ - INFO - Classe 27: 2 images existantes, cible: 30
+2025-04-09 10:53:35,516 - __main__ - INFO - Classe 11: 28 nouvelles images générées
+2025-04-09 10:53:35,516 - __mp_main__ - INFO - Classe 27: génération de ~14 augmentations par image source
+2025-04-09 10:53:35,683 - __mp_main__ - INFO - Classe 18: 27 nouvelles images générées
+2025-04-09 10:53:35,684 - __main__ - INFO - Classe 18: 27 nouvelles images générées
+2025-04-09 10:53:35,684 - __mp_main__ - INFO - Classe 28: 1 images existantes, cible: 30
+2025-04-09 10:53:35,684 - __mp_main__ - INFO - Classe 28: génération de ~29 augmentations par image source
+2025-04-09 10:53:36,109 - __mp_main__ - INFO - Classe 21: 27 nouvelles images générées
+2025-04-09 10:53:36,110 - __mp_main__ - INFO - Classe 29: 1 images existantes, cible: 30
+2025-04-09 10:53:36,110 - __main__ - INFO - Classe 21: 27 nouvelles images générées
+2025-04-09 10:53:36,110 - __mp_main__ - INFO - Classe 29: génération de ~29 augmentations par image source
+2025-04-09 10:53:36,314 - __mp_main__ - INFO - Classe 27: 28 nouvelles images générées
+2025-04-09 10:53:36,315 - __mp_main__ - INFO - Classe 29: 29 nouvelles images générées
+2025-04-09 10:53:36,316 - __mp_main__ - INFO - Classe 32: 1 images existantes, cible: 30
+2025-04-09 10:53:36,316 - __main__ - INFO - Classe 27: 28 nouvelles images générées
+2025-04-09 10:53:36,316 - __mp_main__ - INFO - Classe 32: génération de ~29 augmentations par image source
+2025-04-09 10:53:36,316 - __mp_main__ - INFO - Classe 38: 4 images existantes, cible: 30
+2025-04-09 10:53:36,317 - __mp_main__ - INFO - Classe 38: génération de ~7 augmentations par image source
+2025-04-09 10:53:36,317 - __main__ - INFO - Classe 29: 29 nouvelles images générées
+2025-04-09 10:53:36,448 - __mp_main__ - INFO - Classe 28: 29 nouvelles images générées
+2025-04-09 10:53:36,449 - __mp_main__ - INFO - Classe 44: 1 images existantes, cible: 30
+2025-04-09 10:53:36,449 - __main__ - INFO - Classe 28: 29 nouvelles images générées
+2025-04-09 10:53:36,449 - __mp_main__ - INFO - Classe 44: génération de ~29 augmentations par image source
+2025-04-09 10:53:36,486 - __mp_main__ - INFO - Classe 32: 29 nouvelles images générées
+2025-04-09 10:53:36,488 - __mp_main__ - INFO - Classe 49: 3 images existantes, cible: 30
+2025-04-09 10:53:36,488 - __main__ - INFO - Classe 32: 29 nouvelles images générées
+2025-04-09 10:53:36,488 - __mp_main__ - INFO - Classe 49: génération de ~9 augmentations par image source
+2025-04-09 10:53:36,550 - __mp_main__ - INFO - Classe 22: 27 nouvelles images générées
+2025-04-09 10:53:36,552 - __mp_main__ - INFO - Classe 56: 2 images existantes, cible: 30
+2025-04-09 10:53:36,552 - __main__ - INFO - Classe 22: 27 nouvelles images générées
+2025-04-09 10:53:36,552 - __mp_main__ - INFO - Classe 56: génération de ~14 augmentations par image source
+2025-04-09 10:53:36,857 - __mp_main__ - INFO - Classe 38: 26 nouvelles images générées
+2025-04-09 10:53:36,857 - __mp_main__ - INFO - Classe 58: 3 images existantes, cible: 30
+2025-04-09 10:53:36,858 - __main__ - INFO - Classe 38: 26 nouvelles images générées
+2025-04-09 10:53:36,858 - __mp_main__ - INFO - Classe 58: génération de ~9 augmentations par image source
+2025-04-09 10:53:37,170 - __mp_main__ - INFO - Classe 56: 28 nouvelles images générées
+2025-04-09 10:53:37,171 - __mp_main__ - INFO - Classe 65: 4 images existantes, cible: 30
+2025-04-09 10:53:37,171 - __mp_main__ - INFO - Classe 65: génération de ~7 augmentations par image source
+2025-04-09 10:53:37,172 - __main__ - INFO - Classe 56: 28 nouvelles images générées
+2025-04-09 10:53:37,193 - __mp_main__ - INFO - Classe 44: 29 nouvelles images générées
+2025-04-09 10:53:37,195 - __mp_main__ - INFO - Classe 66: 3 images existantes, cible: 30
+2025-04-09 10:53:37,195 - __mp_main__ - INFO - Classe 66: génération de ~9 augmentations par image source
+2025-04-09 10:53:37,195 - __main__ - INFO - Classe 44: 29 nouvelles images générées
+2025-04-09 10:53:37,342 - __mp_main__ - INFO - Classe 49: 27 nouvelles images générées
+2025-04-09 10:53:37,343 - __mp_main__ - INFO - Classe 69: 1 images existantes, cible: 30
+2025-04-09 10:53:37,343 - __main__ - INFO - Classe 49: 27 nouvelles images générées
+2025-04-09 10:53:37,344 - __mp_main__ - INFO - Classe 69: génération de ~29 augmentations par image source
+2025-04-09 10:53:37,526 - __mp_main__ - INFO - Classe 58: 27 nouvelles images générées
+2025-04-09 10:53:37,528 - __mp_main__ - INFO - Classe 73: 3 images existantes, cible: 30
+2025-04-09 10:53:37,529 - __mp_main__ - INFO - Classe 73: génération de ~9 augmentations par image source
+2025-04-09 10:53:37,529 - __main__ - INFO - Classe 58: 27 nouvelles images générées
+2025-04-09 10:53:37,984 - __mp_main__ - INFO - Classe 65: 26 nouvelles images générées
+2025-04-09 10:53:37,985 - __mp_main__ - INFO - Classe 75: 1 images existantes, cible: 30
+2025-04-09 10:53:37,986 - __mp_main__ - INFO - Classe 75: génération de ~29 augmentations par image source
+2025-04-09 10:53:38,077 - __mp_main__ - INFO - Classe 66: 27 nouvelles images générées
+2025-04-09 10:53:38,080 - __main__ - INFO - Classe 66: 27 nouvelles images générées
+2025-04-09 10:53:38,080 - __mp_main__ - INFO - Classe 81: 2 images existantes, cible: 30
+2025-04-09 10:53:38,080 - __mp_main__ - INFO - Classe 81: génération de ~14 augmentations par image source
+2025-04-09 10:53:38,433 - __mp_main__ - INFO - Classe 69: 29 nouvelles images générées
+2025-04-09 10:53:38,436 - __mp_main__ - INFO - Classe 82: 2 images existantes, cible: 30
+2025-04-09 10:53:38,436 - __main__ - INFO - Classe 69: 29 nouvelles images générées
+2025-04-09 10:53:38,436 - __mp_main__ - INFO - Classe 82: génération de ~14 augmentations par image source
+2025-04-09 10:53:38,653 - __mp_main__ - INFO - Classe 73: 27 nouvelles images générées
+2025-04-09 10:53:38,655 - __mp_main__ - INFO - Classe 93: 3 images existantes, cible: 30
+2025-04-09 10:53:38,655 - __main__ - INFO - Classe 73: 27 nouvelles images générées
+2025-04-09 10:53:38,655 - __mp_main__ - INFO - Classe 93: génération de ~9 augmentations par image source
+2025-04-09 10:53:39,041 - __mp_main__ - INFO - Classe 82: 28 nouvelles images générées
+2025-04-09 10:53:39,042 - __main__ - INFO - Classe 82: 28 nouvelles images générées
+2025-04-09 10:53:39,042 - __mp_main__ - INFO - Classe 98: 1 images existantes, cible: 30
+2025-04-09 10:53:39,043 - __mp_main__ - INFO - Classe 98: génération de ~29 augmentations par image source
+2025-04-09 10:53:39,117 - __mp_main__ - INFO - Classe 81: 28 nouvelles images générées
+2025-04-09 10:53:39,118 - __main__ - INFO - Classe 81: 28 nouvelles images générées
+2025-04-09 10:53:39,277 - __mp_main__ - INFO - Classe 75: 29 nouvelles images générées
+2025-04-09 10:53:39,278 - __main__ - INFO - Classe 75: 29 nouvelles images générées
+2025-04-09 10:53:39,341 - __mp_main__ - INFO - Classe 98: 29 nouvelles images générées
+2025-04-09 10:53:39,342 - __main__ - INFO - Classe 98: 29 nouvelles images générées
+2025-04-09 10:53:39,695 - __mp_main__ - INFO - Classe 93: 27 nouvelles images générées
+2025-04-09 10:53:39,696 - __main__ - INFO - Classe 93: 27 nouvelles images générées
+2025-04-09 10:53:40,917 - __main__ - INFO - Total de 720 nouvelles images générées
+2025-04-09 10:53:40,935 - __main__ - INFO - Fichier train_augmented.txt généré avec 2012 images
+2025-04-09 10:53:40,935 - __main__ - INFO - Augmentation des données terminée avec succès!
+2025-04-09 10:53:40,935 - __main__ - INFO - Prétraitement terminé
+2025-04-09 10:54:43,795 - __main__ - INFO - Démarrage du prétraitement des données
+2025-04-09 10:54:43,795 - __main__ - INFO - Chargement des informations du jeu de données
+2025-04-09 10:54:43,800 - __main__ - INFO - Analyse de la distribution des classes
+2025-04-09 10:54:43,801 - __main__ - INFO - Nombre moyen d'images par classe: 12.79
+2025-04-09 10:54:43,801 - __main__ - INFO - Nombre médian d'images par classe: 9
+2025-04-09 10:54:43,801 - __main__ - INFO - Seuil de sous-représentation (35e percentile): 6.0
+2025-04-09 10:54:43,801 - __main__ - INFO - Classes sous-représentées identifiées: 31
+2025-04-09 10:54:43,801 - __main__ - INFO - Classes bien représentées (>= moyenne): 37
+2025-04-09 10:54:44,082 - __main__ - INFO - Augmentation des 31 classes sous-représentées
+2025-04-09 10:54:51,989 - __mp_main__ - INFO - Classe 1: 4 images existantes, cible: 35
+2025-04-09 10:54:51,989 - __mp_main__ - INFO - Classe 1: génération de ~8 augmentations par image source
+2025-04-09 10:54:52,028 - __mp_main__ - INFO - Classe 2: 2 images existantes, cible: 35
+2025-04-09 10:54:52,028 - __mp_main__ - INFO - Classe 2: génération de ~17 augmentations par image source
+2025-04-09 10:54:52,070 - __mp_main__ - INFO - Classe 7: 3 images existantes, cible: 35
+2025-04-09 10:54:52,070 - __mp_main__ - INFO - Classe 7: génération de ~11 augmentations par image source
+2025-04-09 10:54:52,071 - __mp_main__ - INFO - Classe 10: 2 images existantes, cible: 35
+2025-04-09 10:54:52,071 - __mp_main__ - INFO - Classe 10: génération de ~17 augmentations par image source
+2025-04-09 10:54:52,289 - __mp_main__ - INFO - Classe 10: 33 nouvelles images générées
+2025-04-09 10:54:52,290 - __main__ - INFO - Classe 10: 33 nouvelles images générées
+2025-04-09 10:54:52,290 - __mp_main__ - INFO - Classe 11: 2 images existantes, cible: 35
+2025-04-09 10:54:52,290 - __mp_main__ - INFO - Classe 11: génération de ~17 augmentations par image source
+2025-04-09 10:54:53,029 - __mp_main__ - INFO - Classe 1: 31 nouvelles images générées
+2025-04-09 10:54:53,029 - __mp_main__ - INFO - Classe 18: 3 images existantes, cible: 35
+2025-04-09 10:54:53,030 - __mp_main__ - INFO - Classe 18: génération de ~11 augmentations par image source
+2025-04-09 10:54:53,030 - __main__ - INFO - Classe 1: 31 nouvelles images générées
+2025-04-09 10:54:53,214 - __mp_main__ - INFO - Classe 2: 33 nouvelles images générées
+2025-04-09 10:54:53,216 - __mp_main__ - INFO - Classe 21: 3 images existantes, cible: 35
+2025-04-09 10:54:53,216 - __mp_main__ - INFO - Classe 21: génération de ~11 augmentations par image source
+2025-04-09 10:54:53,216 - __main__ - INFO - Classe 2: 33 nouvelles images générées
+2025-04-09 10:54:53,283 - __mp_main__ - INFO - Classe 7: 32 nouvelles images générées
+2025-04-09 10:54:53,284 - __mp_main__ - INFO - Classe 22: 3 images existantes, cible: 35
+2025-04-09 10:54:53,284 - __mp_main__ - INFO - Classe 22: génération de ~11 augmentations par image source
+2025-04-09 10:54:53,284 - __main__ - INFO - Classe 7: 32 nouvelles images générées
+2025-04-09 10:54:53,469 - __mp_main__ - INFO - Classe 11: 33 nouvelles images générées
+2025-04-09 10:54:53,470 - __mp_main__ - INFO - Classe 27: 2 images existantes, cible: 35
+2025-04-09 10:54:53,471 - __mp_main__ - INFO - Classe 27: génération de ~17 augmentations par image source
+2025-04-09 10:54:53,471 - __main__ - INFO - Classe 11: 33 nouvelles images générées
+2025-04-09 10:54:53,503 - __mp_main__ - INFO - Classe 18: 32 nouvelles images générées
+2025-04-09 10:54:53,504 - __mp_main__ - INFO - Classe 28: 1 images existantes, cible: 35
+2025-04-09 10:54:53,504 - __main__ - INFO - Classe 18: 32 nouvelles images générées
+2025-04-09 10:54:53,504 - __mp_main__ - INFO - Classe 28: génération de ~34 augmentations par image source
+2025-04-09 10:54:54,088 - __mp_main__ - INFO - Classe 21: 32 nouvelles images générées
+2025-04-09 10:54:54,089 - __main__ - INFO - Classe 21: 32 nouvelles images générées
+2025-04-09 10:54:54,089 - __mp_main__ - INFO - Classe 29: 1 images existantes, cible: 35
+2025-04-09 10:54:54,089 - __mp_main__ - INFO - Classe 29: génération de ~34 augmentations par image source
+2025-04-09 10:54:54,316 - __mp_main__ - INFO - Classe 29: 34 nouvelles images générées
+2025-04-09 10:54:54,317 - __mp_main__ - INFO - Classe 32: 1 images existantes, cible: 35
+2025-04-09 10:54:54,317 - __main__ - INFO - Classe 29: 34 nouvelles images générées
+2025-04-09 10:54:54,317 - __mp_main__ - INFO - Classe 32: génération de ~34 augmentations par image source
+2025-04-09 10:54:54,327 - __mp_main__ - INFO - Classe 27: 33 nouvelles images générées
+2025-04-09 10:54:54,327 - __mp_main__ - INFO - Classe 38: 4 images existantes, cible: 35
+2025-04-09 10:54:54,329 - __mp_main__ - INFO - Classe 38: génération de ~8 augmentations par image source
+2025-04-09 10:54:54,329 - __main__ - INFO - Classe 27: 33 nouvelles images générées
+2025-04-09 10:54:54,476 - __mp_main__ - INFO - Classe 28: 34 nouvelles images générées
+2025-04-09 10:54:54,480 - __mp_main__ - INFO - Classe 39: 5 images existantes, cible: 35
+2025-04-09 10:54:54,480 - __main__ - INFO - Classe 28: 34 nouvelles images générées
+2025-04-09 10:54:54,480 - __mp_main__ - INFO - Classe 39: génération de ~6 augmentations par image source
+2025-04-09 10:54:54,529 - __mp_main__ - INFO - Classe 32: 34 nouvelles images générées
+2025-04-09 10:54:54,530 - __mp_main__ - INFO - Classe 44: 1 images existantes, cible: 35
+2025-04-09 10:54:54,531 - __mp_main__ - INFO - Classe 44: génération de ~34 augmentations par image source
+2025-04-09 10:54:54,531 - __main__ - INFO - Classe 32: 34 nouvelles images générées
+2025-04-09 10:54:54,903 - __mp_main__ - INFO - Classe 38: 31 nouvelles images générées
+2025-04-09 10:54:54,904 - __mp_main__ - INFO - Classe 49: 3 images existantes, cible: 35
+2025-04-09 10:54:54,904 - __mp_main__ - INFO - Classe 49: génération de ~11 augmentations par image source
+2025-04-09 10:54:54,904 - __main__ - INFO - Classe 38: 31 nouvelles images générées
+2025-04-09 10:54:54,961 - __mp_main__ - INFO - Classe 22: 32 nouvelles images générées
+2025-04-09 10:54:54,962 - __mp_main__ - INFO - Classe 56: 2 images existantes, cible: 35
+2025-04-09 10:54:54,963 - __mp_main__ - INFO - Classe 56: génération de ~17 augmentations par image source
+2025-04-09 10:54:54,963 - __main__ - INFO - Classe 22: 32 nouvelles images générées
+2025-04-09 10:54:55,395 - __mp_main__ - INFO - Classe 44: 34 nouvelles images générées
+2025-04-09 10:54:55,397 - __mp_main__ - INFO - Classe 57: 5 images existantes, cible: 35
+2025-04-09 10:54:55,397 - __main__ - INFO - Classe 44: 34 nouvelles images générées
+2025-04-09 10:54:55,398 - __mp_main__ - INFO - Classe 57: génération de ~6 augmentations par image source
+2025-04-09 10:54:55,623 - __mp_main__ - INFO - Classe 39: 30 nouvelles images générées
+2025-04-09 10:54:55,624 - __mp_main__ - INFO - Classe 58: 3 images existantes, cible: 35
+2025-04-09 10:54:55,624 - __main__ - INFO - Classe 39: 30 nouvelles images générées
+2025-04-09 10:54:55,624 - __mp_main__ - INFO - Classe 58: génération de ~11 augmentations par image source
+2025-04-09 10:54:55,711 - __mp_main__ - INFO - Classe 56: 33 nouvelles images générées
+2025-04-09 10:54:55,713 - __mp_main__ - INFO - Classe 62: 5 images existantes, cible: 35
+2025-04-09 10:54:55,714 - __main__ - INFO - Classe 56: 33 nouvelles images générées
+2025-04-09 10:54:55,714 - __mp_main__ - INFO - Classe 62: génération de ~6 augmentations par image source
+2025-04-09 10:54:55,910 - __mp_main__ - INFO - Classe 49: 32 nouvelles images générées
+2025-04-09 10:54:55,911 - __main__ - INFO - Classe 49: 32 nouvelles images générées
+2025-04-09 10:54:55,911 - __mp_main__ - INFO - Classe 65: 4 images existantes, cible: 35
+2025-04-09 10:54:55,912 - __mp_main__ - INFO - Classe 65: génération de ~8 augmentations par image source
+2025-04-09 10:54:56,450 - __mp_main__ - INFO - Classe 58: 32 nouvelles images générées
+2025-04-09 10:54:56,452 - __mp_main__ - INFO - Classe 66: 3 images existantes, cible: 35
+2025-04-09 10:54:56,452 - __main__ - INFO - Classe 58: 32 nouvelles images générées
+2025-04-09 10:54:56,452 - __mp_main__ - INFO - Classe 66: génération de ~11 augmentations par image source
+2025-04-09 10:54:56,472 - __mp_main__ - INFO - Classe 62: 30 nouvelles images générées
+2025-04-09 10:54:56,474 - __mp_main__ - INFO - Classe 69: 1 images existantes, cible: 35
+2025-04-09 10:54:56,474 - __mp_main__ - INFO - Classe 69: génération de ~34 augmentations par image source
+2025-04-09 10:54:56,474 - __main__ - INFO - Classe 62: 30 nouvelles images générées
+2025-04-09 10:54:56,477 - __mp_main__ - INFO - Classe 57: 30 nouvelles images générées
+2025-04-09 10:54:56,477 - __main__ - INFO - Classe 57: 30 nouvelles images générées
+2025-04-09 10:54:56,478 - __mp_main__ - INFO - Classe 71: 5 images existantes, cible: 35
+2025-04-09 10:54:56,478 - __mp_main__ - INFO - Classe 71: génération de ~6 augmentations par image source
+2025-04-09 10:54:56,761 - __mp_main__ - INFO - Classe 65: 31 nouvelles images générées
+2025-04-09 10:54:56,762 - __mp_main__ - INFO - Classe 73: 3 images existantes, cible: 35
+2025-04-09 10:54:56,762 - __mp_main__ - INFO - Classe 73: génération de ~11 augmentations par image source
+2025-04-09 10:54:56,763 - __main__ - INFO - Classe 65: 31 nouvelles images générées
+2025-04-09 10:54:57,235 - __mp_main__ - INFO - Classe 71: 30 nouvelles images générées
+2025-04-09 10:54:57,236 - __mp_main__ - INFO - Classe 75: 1 images existantes, cible: 35
+2025-04-09 10:54:57,236 - __main__ - INFO - Classe 71: 30 nouvelles images générées
+ions par image source
+2025-04-09 10:54:57,415 - __mp_main__ - INFO - Classe 66: 32 nouvelles images générées
+2025-04-09 10:54:57,417 - __mp_main__ - INFO - Classe 81: 2 images existantes, cible: 35
+2025-04-09 10:54:57,417 - __mp_main__ - INFO - Classe 81: génération de ~17 augmentations par image source
+2025-04-09 10:54:57,417 - __main__ - INFO - Classe 66: 32 nouvelles images générées
+2025-04-09 10:54:57,740 - __mp_main__ - INFO - Classe 69: 34 nouvelles images générées
+2025-04-09 10:54:57,742 - __mp_main__ - INFO - Classe 82: 2 images existantes, cible: 35
+2025-04-09 10:54:57,742 - __mp_main__ - INFO - Classe 82: génération de ~17 augmentations par image source
+2025-04-09 10:54:57,743 - __main__ - INFO - Classe 69: 34 nouvelles images générées
+2025-04-09 10:54:57,894 - __mp_main__ - INFO - Classe 73: 32 nouvelles images générées
+2025-04-09 10:54:57,896 - __main__ - INFO - Classe 73: 32 nouvelles images générées
+2025-04-09 10:54:57,896 - __mp_main__ - INFO - Classe 83: 5 images existantes, cible: 35
+2025-04-09 10:54:57,896 - __mp_main__ - INFO - Classe 83: génération de ~6 augmentations par image source
+2025-04-09 10:54:58,435 - __mp_main__ - INFO - Classe 82: 33 nouvelles images générées
+2025-04-09 10:54:58,436 - __mp_main__ - INFO - Classe 93: 3 images existantes, cible: 35
+2025-04-09 10:54:58,437 - __mp_main__ - INFO - Classe 93: génération de ~11 augmentations par image source
+2025-04-09 10:54:58,437 - __main__ - INFO - Classe 82: 33 nouvelles images générées
+2025-04-09 10:54:58,760 - __mp_main__ - INFO - Classe 81: 33 nouvelles images générées
+2025-04-09 10:54:58,762 - __main__ - INFO - Classe 81: 33 nouvelles images générées
+2025-04-09 10:54:58,762 - __mp_main__ - INFO - Classe 98: 1 images existantes, cible: 35
+2025-04-09 10:54:58,762 - __mp_main__ - INFO - Classe 98: génération de ~34 augmentations par image source
+2025-04-09 10:54:58,820 - __mp_main__ - INFO - Classe 75: 34 nouvelles images générées
+2025-04-09 10:54:58,822 - __main__ - INFO - Classe 75: 34 nouvelles images générées
+2025-04-09 10:54:58,959 - __mp_main__ - INFO - Classe 83: 30 nouvelles images générées
+2025-04-09 10:54:58,960 - __main__ - INFO - Classe 83: 30 nouvelles images générées
+2025-04-09 10:54:59,102 - __mp_main__ - INFO - Classe 98: 34 nouvelles images générées
+2025-04-09 10:54:59,103 - __main__ - INFO - Classe 98: 34 nouvelles images générées
+2025-04-09 10:54:59,544 - __mp_main__ - INFO - Classe 93: 32 nouvelles images générées
+2025-04-09 10:54:59,545 - __main__ - INFO - Classe 93: 32 nouvelles images générées
+2025-04-09 10:55:00,790 - __main__ - INFO - Total de 1000 nouvelles images générées
+2025-04-09 10:55:00,810 - __main__ - INFO - Fichier train_augmented.txt généré avec 2292 images
+2025-04-09 10:55:00,811 - __main__ - INFO - Augmentation des données terminée avec succès!
+2025-04-09 10:55:00,811 - __main__ - INFO - Prétraitement terminé

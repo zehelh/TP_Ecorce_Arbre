@@ -23,10 +23,6 @@ TP_Ecorce_Arbre/
 │   ├── test.txt            # Fichier de liste de test
 │   └── info.txt            # Informations sur le dataset
 │
-├── notebooks/              # Notebooks Jupyter pour l'exploration et la visualisation
-│   ├── exploration.ipynb   # Exploration du dataset
-│   └── visualisation.ipynb # Visualisation des résultats
-│
 ├── src/                    # Code source Python
 │   ├── data/               # Gestion des données
 │   │   ├── dataset.py      # Classe pour charger le dataset
@@ -35,23 +31,33 @@ TP_Ecorce_Arbre/
 │   ├── models/             # Modèles CNN
 │   │   ├── base_model.py   # Architecture CNN de base
 │   │   ├── advanced_model.py # Architecture CNN avancée
-│   │   └── patch_model.py  # Modèle basé sur des patches
+│   │   ├── patch_model.py  # Modèle basé sur des patches
+│   │   └── enhanced_patch_model.py # Modèle avancé basé sur des patches
 │   │
 │   ├── utils/              # Utilitaires
 │   │   ├── training.py     # Fonctions d'entraînement
 │   │   ├── evaluation.py   # Fonctions d'évaluation
-│   │   └── visualization.py # Fonctions de visualisation
+│   │   ├── visualization.py # Fonctions de visualisation
+│   │   ├── callbacks.py    # Callbacks d'entraînement
+│   │   └── metrics.py      # Calcul des métriques
 │   │
 │   └── config.py           # Configuration du projet
 │
 ├── results/                # Résultats d'expériences
 │   ├── models/             # Modèles sauvegardés
 │   ├── logs/               # Logs d'entraînement
-│   └── figures/            # Figures et visualisations
+│   ├── figures/            # Figures et visualisations
+│   └── hyperopt/           # Résultats d'optimisation d'hyperparamètres
 │
 ├── main.py                 # Point d'entrée principal
-├── train.py                # Script d'entraînement
+├── train.py                # Script d'entraînement standard
+├── train_2phases.py        # Script d'entraînement en deux phases
 ├── evaluate.py             # Script d'évaluation
+├── evaluate_optimized.py   # Script d'évaluation pour modèle optimisé
+├── hyperopt.py             # Optimisation d'hyperparamètres avec Ray Tune
+├── preprocess_data.py      # Prétraitement et augmentation des données
+├── enhanced_patch_optimized_model.py # Modèle optimisé avec ResNet50
+├── QUESTIONS.md            # Réponses détaillées aux questions du TP
 ├── requirements.txt        # Dépendances du projet
 ├── README.md               # Documentation du projet
 └── CHANGELOG.md            # Journal des modifications
@@ -60,48 +66,139 @@ TP_Ecorce_Arbre/
 ## Installation
 
 ```bash
+# Cloner le dépôt
+git clone https://github.com/votre-username/TP_Ecorce_Arbre.git
+cd TP_Ecorce_Arbre
+
+# Installer les dépendances
 pip install -r requirements.txt
+
+# Télécharger le dataset Bark-101 (si nécessaire)
+# Les instructions de téléchargement sont disponibles sur le site officiel
 ```
 
 ## Utilisation
 
-### Exploration du dataset
+### Préparation et exploration des données
+
+Pour explorer le dataset et générer des visualisations :
 
 ```bash
 python main.py --action explore
 ```
 
-### Entraînement d'un modèle
+### Augmentation ciblée des données
+
+Pour augmenter uniquement les classes sous-représentées du dataset et réduire le déséquilibre :
 
 ```bash
-# Models names are: base, advanced, patch, enhanced_patch
+python preprocess_data.py --augment --threshold_percentile 25 --target_count 30
+```
 
-# Utilisation via main.py
+Options disponibles :
+- `--threshold_percentile` : Percentile utilisé pour identifier les classes sous-représentées (défaut: 25)
+- `--target_count` : Nombre cible d'images par classe après augmentation
+- `--visualize` : Afficher des exemples d'augmentation
+- `--max_per_class` : Nombre maximal d'images générées par classe
+
+### Entraînement des modèles
+
+Pour entraîner le modèle de base :
+
+```bash
 python main.py --action train --model base --cuda
+```
 
-# Utilisation directe via train.py
-# use of --epochs x | --lr | --batch_size etc..
+Ou directement via le script d'entraînement :
+
+```bash
 python train.py --model base --cuda
 ```
 
-### Évaluation d'un modèle
+Options disponibles pour l'entraînement :
+- `--model` : Type de modèle (base, advanced, patch, enhanced_patch)
+- `--epochs` : Nombre d'époques d'entraînement
+- `--batch_size` : Taille du batch
+- `--lr` : Taux d'apprentissage
+- `--patience` : Nombre d'époques sans amélioration avant arrêt précoce
+- `--cuda` : Utiliser CUDA si disponible
+
+### Entraînement en deux phases (transfert learning + fine-tuning)
+
+Pour entraîner le modèle optimisé en utilisant l'approche en deux phases :
 
 ```bash
-# Utilisation via main.py
-python main.py --action evaluate --model_path results/models/base_model_best.pth
-
-# Utilisation directe via evaluate.py
-python evaluate.py --model_path results/models/base_model_best.pth --cuda
+python train_2phases.py --cuda --use_best_model --phase1_epochs 30 --phase2_epochs 50 --patch_size 96 --patch_stride 24 --num_patches 9 --lr 0.00044 --momentum 0.938 --weight_decay 0.00018
 ```
 
-### Visualisation de l'attention du modèle
+Options disponibles :
+- `--phase1_epochs` : Nombre d'époques pour la phase 1 (entraînement des couches supérieures)
+- `--phase2_epochs` : Nombre d'époques pour la phase 2 (fine-tuning du backbone)
+- `--skip_phase1` : Pour passer directement à la phase 2 (nécessite `--phase1_checkpoint`)
+- `--use_best_model` : Utiliser le modèle avec les meilleures performances de validation
+
+### Évaluation des modèles
+
+Pour évaluer un modèle spécifique :
+
+```bash
+python main.py --action evaluate --model_path results/models/base_model_best.pth
+```
+
+Ou directement via le script d'évaluation :
+
+```bash
+python evaluate.py --model_path results/models/enhanced_patch_2phases_final.pth --cuda
+```
+
+Pour le modèle EnhancedPatchOptimizedModel (basé sur ResNet50) :
+
+```bash
+python evaluate_optimized.py --model_path results/models/enhanced_patch_optimized_best.pth --cuda
+```
+
+Pour évaluer tous les modèles à la fois :
+
+```bash
+python evaluate.py --all --cuda
+```
+
+### Visualisation de l'attention
+
+Pour visualiser les cartes d'attention du modèle sur une image spécifique :
 
 ```bash
 python main.py --action visualize --model base --model_path results/models/base_model_best.pth --image_index 10 --cuda
-
-# Pour les modèles à base de patches (patch et enhanced_patch), visualisation spécifique des patches
-python main.py --action visualize --model enhanced_patch --model_path results/models/enhanced_patch_model_best.pth --image_index 10 --cuda
 ```
+
+Options disponibles :
+- `--image_index` : Index de l'image à visualiser
+- `--save_path` : Chemin pour sauvegarder la visualisation
+- `--show` : Afficher la visualisation (nécessite interface graphique)
+
+### Optimisation des hyperparamètres
+
+Pour le modèle EnhancedPatchCNN, un script d'optimisation automatique des hyperparamètres est disponible:
+
+```bash
+# Optimisation avec Ray Tune (20 combinaisons d'hyperparamètres)
+python hyperopt.py --num_trials 20 --epochs 10 --cuda
+
+# Optimisation puis entraînement du modèle final avec les meilleurs hyperparamètres
+python hyperopt.py --num_trials 15 --epochs 5 --train_final --final_epochs 50 --cuda
+
+# Optimisation avec ressources personnalisées (multi-GPU)
+python hyperopt.py --num_trials 30 --num_cpus 8 --num_gpus 2 --cuda
+```
+
+Les hyperparamètres optimisés incluent:
+- Learning rate
+- Momentum et régularisation
+- Architecture du backbone (ResNet18/34/50)
+- Nombre et taille des patches
+- Activation de la modélisation du contexte
+
+Les résultats de l'optimisation sont enregistrés dans `results/hyperopt/` et `results/logs/`.
 
 ## Architectures CNN implémentées
 
@@ -109,245 +206,42 @@ python main.py --action visualize --model enhanced_patch --model_path results/mo
 2. **Modèle avancé**: Architecture plus profonde avec des blocs résiduels et batch normalization
 3. **Modèle basé sur des patches**: Division des images en patches pour améliorer la classification
 4. **Modèle amélioré basé sur des patches**: Architecture avancée avec extracteur de caractéristiques ResNet, mécanisme d'attention multi-têtes et modélisation du contexte inter-patches
+5. **Modèle optimisé en deux phases**: Version améliorée utilisant ResNet50 et entraînement progressif
 
 ## Résultats
 
-Les résultats détaillés sont disponibles dans le dossier `results/` et dans les notebooks d'analyse.
+| Modèle | Accuracy | Precision | Recall | F1-Score | Taille du modèle |
+|--------|----------|-----------|--------|----------|------------------|
+| Base CNN | 17.92% | 0.2357 | 0.1792 | 0.1743 | 199 MB |
+| Advanced CNN | 20.54% | 0.2621 | 0.2054 | 0.2012 | 86 MB |
+| Patch CNN | 13.98% | 0.1689 | 0.1398 | 0.1412 | 1.2 MB |
+| EnhancedPatch CNN | 37.07% | 0.4694 | 0.3707 | 0.3736 | 62 MB |
+| EnhancedPatch Optimized | 44.09% | 0.5327 | 0.4409 | 0.4502 | 395 MB |
+| EnhancedPatch (2-phases) | 43.94% | 0.5289 | 0.4394 | 0.4471 | 243 MB |
+
+Les résultats détaillés sont disponibles dans le dossier `results/` et le fichier `QUESTIONS.md`.
+
+## Informations sur le dataset
+
+- Nombre total d'images d'entraînement: 1292
+- Nombre total d'images de test: 1295
+- Nombre total de classes: 101
+
+Caractéristiques des images :
+- Largeur min: 93px, max: 704px, moyenne: 388.00px, médiane: 376.5px
+- Hauteur min: 261px, max: 800px, moyenne: 611.57px, médiane: 600.0px
+- Ratio d'aspect min: 0.21, max: 1.50, moyenne: 0.66
+
+## Analyse des performances
+
+Les modèles basés sur des patches avec mécanismes d'attention ont nettement surpassé les approches classiques, avec une amélioration de la précision de plus de 20 points de pourcentage. L'approche en deux phases (transfert learning puis fine-tuning) s'est révélée particulièrement efficace pour ce problème de classification avec données limitées.
+
+Pour une analyse détaillée des performances par classe et des réponses aux questions du TP, consulter le fichier `QUESTIONS.md`.
+
+## Auteurs
+
+- [Votre Nom]
 
 ## Licence
 
-Ce projet est réalisé dans le cadre d'un TP de Deep Learning. 
-
-
-Nombre total d'images d'entraînement: 1292
-Nombre total d'images de test: 1295
-Nombre total de classes: 101
-
-Répartition des classes (entraînement):
-  Classe 0: 16 images
-  Classe 1: 4 images
-  Classe 2: 2 images
-  Classe 3: 10 images
-  Classe 4: 13 images
-  Classe 5: 24 images
-  Classe 6: 55 images
-  Classe 7: 3 images
-  Classe 8: 16 images
-  Classe 9: 31 images
-  Classe 10: 2 images
-  Classe 11: 2 images
-  Classe 12: 19 images
-  Classe 13: 20 images
-  Classe 14: 13 images
-  Classe 15: 55 images
-  Classe 16: 18 images
-  Classe 17: 8 images
-  Classe 18: 3 images
-  Classe 19: 6 images
-  Classe 20: 10 images
-  Classe 21: 3 images
-  Classe 22: 3 images
-  Classe 23: 11 images
-  Classe 24: 6 images
-  Classe 25: 7 images
-  Classe 26: 6 images
-  Classe 27: 2 images
-  Classe 28: 1 images
-  Classe 29: 1 images
-  Classe 30: 15 images
-  Classe 31: 13 images
-  Classe 32: 1 images
-  Classe 33: 21 images
-  Classe 34: 21 images
-  Classe 35: 14 images
-  Classe 36: 9 images
-  Classe 37: 30 images
-  Classe 38: 4 images
-  Classe 39: 5 images
-  Classe 40: 12 images
-  Classe 41: 7 images
-  Classe 42: 6 images
-  Classe 43: 12 images
-  Classe 44: 1 images
-  Classe 45: 17 images
-  Classe 46: 17 images
-  Classe 47: 24 images
-  Classe 48: 13 images
-  Classe 49: 3 images
-  Classe 50: 25 images
-  Classe 51: 9 images
-  Classe 52: 10 images
-  Classe 53: 35 images
-  Classe 54: 9 images
-  Classe 55: 15 images
-  Classe 56: 2 images
-  Classe 57: 5 images
-  Classe 58: 3 images
-  Classe 59: 69 images
-  Classe 60: 19 images
-  Classe 61: 13 images
-  Classe 62: 5 images
-  Classe 63: 17 images
-  Classe 64: 16 images
-  Classe 65: 4 images
-  Classe 66: 3 images
-  Classe 67: 6 images
-  Classe 68: 20 images
-  Classe 69: 1 images
-  Classe 70: 6 images
-  Classe 71: 5 images
-  Classe 72: 8 images
-  Classe 73: 3 images
-  Classe 74: 64 images
-  Classe 75: 1 images
-  Classe 76: 9 images
-  Classe 77: 12 images
-  Classe 78: 16 images
-  Classe 79: 35 images
-  Classe 80: 13 images
-  Classe 81: 2 images
-  Classe 82: 2 images
-  Classe 83: 5 images
-  Classe 84: 41 images
-  Classe 85: 10 images
-  Classe 86: 9 images
-  Classe 87: 10 images
-  Classe 88: 12 images
-  Classe 89: 9 images
-  Classe 90: 33 images
-  Classe 91: 7 images
-  Classe 92: 6 images
-  Classe 93: 3 images
-  Classe 94: 11 images
-  Classe 95: 6 images
-  Classe 96: 12 images
-  Classe 97: 12 images
-  Classe 98: 1 images
-  Classe 99: 6 images
-  Classe 100: 22 images
-
-Répartition des classes (test):
-  Classe 0: 16 images
-  Classe 1: 5 images
-  Classe 2: 3 images
-  Classe 3: 9 images
-  Classe 4: 13 images
-  Classe 5: 23 images
-  Classe 6: 55 images
-  Classe 7: 4 images
-  Classe 8: 16 images
-  Classe 9: 31 images
-  Classe 10: 1 images
-  Classe 11: 3 images
-  Classe 12: 18 images
-  Classe 13: 20 images
-  Classe 14: 14 images
-  Classe 15: 54 images
-  Classe 16: 19 images
-  Classe 17: 8 images
-  Classe 18: 4 images
-  Classe 19: 5 images
-  Classe 20: 10 images
-  Classe 21: 4 images
-  Classe 22: 2 images
-  Classe 23: 12 images
-  Classe 24: 5 images
-  Classe 25: 6 images
-  Classe 26: 7 images
-  Classe 27: 2 images
-  Classe 28: 1 images
-  Classe 29: 2 images
-  Classe 30: 15 images
-  Classe 31: 12 images
-  Classe 32: 2 images
-  Classe 33: 20 images
-  Classe 34: 21 images
-  Classe 35: 15 images
-  Classe 36: 10 images
-  Classe 37: 29 images
-  Classe 38: 5 images
-  Classe 39: 4 images
-  Classe 40: 12 images
-  Classe 41: 8 images
-  Classe 42: 5 images
-  Classe 43: 12 images
-  Classe 44: 1 images
-  Classe 45: 16 images
-  Classe 46: 17 images
-  Classe 47: 24 images
-  Classe 48: 13 images
-  Classe 49: 3 images
-  Classe 50: 26 images
-  Classe 51: 8 images
-  Classe 52: 10 images
-  Classe 53: 35 images
-  Classe 54: 10 images
-  Classe 55: 14 images
-  Classe 56: 3 images
-  Classe 57: 5 images
-  Classe 58: 2 images
-  Classe 59: 69 images
-  Classe 60: 20 images
-  Classe 61: 12 images
-  Classe 62: 5 images
-  Classe 63: 18 images
-  Classe 64: 16 images
-  Classe 65: 4 images
-  Classe 66: 4 images
-  Classe 67: 5 images
-  Classe 68: 19 images
-  Classe 69: 1 images
-  Classe 70: 6 images
-  Classe 71: 4 images
-  Classe 72: 9 images
-  Classe 73: 2 images
-  Classe 74: 65 images
-  Classe 75: 1 images
-  Classe 76: 8 images
-  Classe 77: 12 images
-  Classe 78: 16 images
-  Classe 79: 36 images
-  Classe 80: 14 images
-  Classe 81: 2 images
-  Classe 82: 2 images
-  Classe 83: 5 images
-  Classe 84: 41 images
-  Classe 85: 10 images
-  Classe 86: 10 images
-  Classe 87: 10 images
-  Classe 88: 11 images
-  Classe 89: 10 images
-  Classe 90: 32 images
-  Classe 91: 7 images
-  Classe 92: 5 images
-  Classe 93: 3 images
-  Classe 94: 12 images
-  Classe 95: 6 images
-  Classe 96: 12 images
-  Classe 97: 12 images
-  Classe 98: 2 images
-  Classe 99: 5 images
-  Classe 100: 23 images
-
-Analyse des dimensions des images...
-Largeur min: 93, max: 704, moyenne: 388.00, médiane: 376.5
-Hauteur min: 261, max: 800, moyenne: 611.57, médiane: 600.0
-Ratio d'aspect min: 0.21, max: 1.50, moyenne: 0.66 
-
-Base model:
-Époque 45/50
-Train Loss: 3.3559, Train Acc: 0.1757
-Val Loss: 3.6084, Val Acc: 0.1792
-EarlyStopping: 10/10
-
-Advanced model:
-Époque 20/20 : train_loss=2.8832, train_acc=0.2763, val_loss=3.6411, val_acc=0.2054
-EarlyStopping: patience 5/10
-
-Patch model:
-Époque 50/50 : train_loss=3.7636, train_acc=0.1354, val_loss=3.8673, val_acc=0.1398
-Validation loss améliorée (3.868634 --> 3.867259). Sauvegarde du modèle...
-Entraînement terminé. Meilleur modèle sauvegardé à D:\Dev\DL\TP_Ecorce_Arbre\results\models\patch_model_best.pth
-Entraînement terminé en 16433.27 secondes
-
-Enhanced patch model:
+Ce projet est réalisé dans le cadre d'un TP de Deep Learning.

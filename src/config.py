@@ -14,7 +14,7 @@ LOG_DIR = os.path.join(RESULTS_DIR, "logs")
 FIGURES_DIR = os.path.join(RESULTS_DIR, "figures")
 
 # Fichiers de données
-TRAIN_FILE = os.path.join(DATA_DIR, "train.txt")
+TRAIN_FILE = os.path.join(DATA_DIR, "train_augmented.txt")
 TEST_FILE = os.path.join(DATA_DIR, "test.txt")
 
 # Paramètres du dataset

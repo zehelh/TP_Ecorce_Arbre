@@ -1,0 +1,8 @@
+model: advanced
+epochs: 20
+batch_size: 32
+lr: 0.001
+momentum: 0.9
+weight_decay: 0.0001
+patience: 10
+training_time: 2209.24 seconds

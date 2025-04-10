@@ -13,6 +13,63 @@ import random
 from ..config import DATA_DIR, TRAIN_FILE, TEST_FILE, BATCH_SIZE, NUM_WORKERS, IMAGE_SIZE
 
 
+def load_dataset_info(data_dir):
+    """
+    Charge les informations du dataset à partir des fichiers train.txt, val.txt et test.txt.
+    
+    Args:
+        data_dir (str): Répertoire contenant les données
+        
+    Returns:
+        dict: Dictionnaire contenant les informations du dataset (chemins des images et labels)
+    """
+    dataset_info = {"train": [], "val": [], "test": []}
+    
+    # Charger les données d'entraînement
+    train_file = os.path.join(data_dir, "train.txt")
+    if os.path.exists(train_file):
+        with open(train_file, 'r') as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                parts = line.strip().split()
+                if len(parts) != 2:
+                    continue
+                image_path, label = parts
+                full_path = os.path.join(data_dir, image_path)
+                dataset_info["train"].append((full_path, int(label)))
+    
+    # Charger les données de validation (si disponibles)
+    val_file = os.path.join(data_dir, "val.txt")
+    if os.path.exists(val_file):
+        with open(val_file, 'r') as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                parts = line.strip().split()
+                if len(parts) != 2:
+                    continue
+                image_path, label = parts
+                full_path = os.path.join(data_dir, image_path)
+                dataset_info["val"].append((full_path, int(label)))
+    
+    # Charger les données de test
+    test_file = os.path.join(data_dir, "test.txt")
+    if os.path.exists(test_file):
+        with open(test_file, 'r') as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                parts = line.strip().split()
+                if len(parts) != 2:
+                    continue
+                image_path, label = parts
+                full_path = os.path.join(data_dir, image_path)
+                dataset_info["test"].append((full_path, int(label)))
+    
+    return dataset_info
+
+
 class BarkDataset(Dataset):
     """
     Classe pour charger le dataset Bark-101 à partir des fichiers train.txt et test.txt.
@@ -258,7 +315,7 @@ def get_transforms(is_train=True):
         ])
 
 
-def get_dataloaders(use_patches=False, patch_size=64, patch_stride=32, num_patches=9):
+def get_dataloaders(use_patches=False, patch_size=64, patch_stride=32, num_patches=9, num_workers=None):
     """
     Crée et retourne les dataloaders pour l'entraînement et l'évaluation.
     
@@ -267,6 +324,7 @@ def get_dataloaders(use_patches=False, patch_size=64, patch_stride=32, num_patch
         patch_size (int): Taille des patches (si use_patches=True)
         patch_stride (int): Pas entre les patches (si use_patches=True)
         num_patches (int): Nombre de patches par image (si use_patches=True)
+        num_workers (int, optional): Nombre de workers pour le chargement de données
         
     Returns:
         tuple: (train_loader, val_loader)
@@ -296,11 +354,14 @@ def get_dataloaders(use_patches=False, patch_size=64, patch_stride=32, num_patch
         train_dataset = BarkDataset(TRAIN_FILE, transform=train_transform, is_train=True)
         test_dataset = BarkDataset(TEST_FILE, transform=test_transform, is_train=False)
     
+    # Utiliser NUM_WORKERS par défaut, sauf si num_workers est explicitement spécifié
+    workers = NUM_WORKERS if num_workers is None else num_workers
+    
     train_loader = DataLoader(
         train_dataset, 
         batch_size=BATCH_SIZE, 
         shuffle=True, 
-        num_workers=NUM_WORKERS,
+        num_workers=workers,
         pin_memory=True
     )
     
@@ -308,7 +369,7 @@ def get_dataloaders(use_patches=False, patch_size=64, patch_stride=32, num_patch
         test_dataset, 
         batch_size=BATCH_SIZE, 
         shuffle=False, 
-        num_workers=NUM_WORKERS,
+        num_workers=workers,
         pin_memory=True
     )
     
