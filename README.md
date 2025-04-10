@@ -240,7 +240,7 @@ Pour une analyse détaillée des performances par classe et des réponses aux qu
 
 ## Auteurs
 
-- [Votre Nom]
+- BOUREL Yvan
 
 ## Licence
 
